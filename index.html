@@ -17,7 +17,7 @@
         background: url('/public/image/banner.jpg');
         background-size: cover;
     }
-    
+
     body #text {
         height: 100%;
         width: 100%;
@@ -26,7 +26,7 @@
         justify-content: center;
         flex-direction: column;
     }
-    
+
     #text h1 {
         font-size: 5em;
         font-weight: 100;
@@ -34,7 +34,7 @@
         line-height: 1em;
         margin-bottom: 10px;
     }
-    
+
     #text p {
         font-size: 1em;
         color: rgba(255, 255, 255, 0.55);
@@ -47,8 +47,8 @@
     <script type="text/javascript">
         function test() {
 
-            var url = ["http://localhost:8080/Apps/Sandcastle/plane1.html","http://localhost:8080/views/flyinfo.html", "http://localhost:8080/views/line.html",
-            "http://localhost:8080/views/map.html","http://localhost:8080/views/staticData.html"]
+            var url = ["http://localhost:8081/Apps/Sandcastle/plane1.html", "http://localhost:8081/views/flyinfo.html", "http://localhost:8081/views/line.html",
+                "http://localhost:8081/views/map.html", "http://localhost:8081/views/staticData.html"]
 
             for (var i = 0; i < url.length; i++) {
                 window.open(url[i], '_blank').location;

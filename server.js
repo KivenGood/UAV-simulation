@@ -2,7 +2,6 @@
 'use strict';
 (function () {
     var express = require('express');
-    const config = require('./config');
     var compression = require('compression');
     var fs = require('fs');
     var url = require('url');
@@ -166,7 +165,7 @@
             // console.log("avgfps", avgfps);
             const Sequelize = require('sequelize');
             ///const config = require('./config');
-            var sequelize = new Sequelize('mycesium', 'root', 'lz1349500382', {
+            var sequelize = new Sequelize('adus', 'root', 'lz1349500382', {
                 host: 'localhost',
                 dialect: 'mysql',
                 pool: {
@@ -234,14 +233,14 @@
     var id = 0;
     app.get('/readDate', function (req, res) {
         var connection = mysql.createConnection({
-            host: config.host,
-            user: config.username,
-            password: config.password,
-            database: config.database
+            host: 'localhost',
+            user: 'root',
+            password: 'lz1349500382',
+            database: 'sheet1'
         });
         connection.connect();
         //  connection.query('select GPS_LAT_CA,GPS_LONG_CA,ALT_STD,ROLL_RATE1 from fly order by Time desc ', function (err, data) {
-        connection.query('select id, Time,WIN_SPD,VMAN,ALTBARFN,TAT,GPS_LAT_CA, GPS_LONG_CA, ALT_STD,FF1,EGT1C,N21,N22,N11,N12  from sheet1 where id>' + id + ' order by id asc LIMIT 0,1000 ', function (err, data) {
+        connection.query('select id,PITCH,PITCH2,PITCH3,PITCH4,YD_ORDER1, YD_ORDER2,YD_ORDER3,YD_ORDER4,ROLL_RATE1,Time,WIN_SPD,VMAN,ALTBARFN,TAT,GPS_LAT_CA, GPS_LONG_CA, ALT_STD,FF1,EGT1C,N21,N22,N11,N12  from sheet1 where id>' + id + ' order by id asc LIMIT 0,1000 ', function (err, data) {
             //connection.query('select id,translateX,translateY,translateZ,rotateX,rotateY,rotateZ from fly_wan where id>' + id + ' order by id asc LIMIT 0,1000 ', function (err, data) {
             //经度、纬度、高度、roll
             if (err) throw err;
