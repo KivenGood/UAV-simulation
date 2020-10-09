@@ -2,6 +2,7 @@
 'use strict';
 (function () {
     var express = require('express');
+    const config = require('./config');
     var compression = require('compression');
     var fs = require('fs');
     var url = require('url');
@@ -12,7 +13,7 @@
 
     var yargs = require('yargs').options({
         'port': {
-            'default': 8080,
+            'default': 8081,
             'description': 'Port to listen on.'
         },
         'public': {
@@ -233,15 +234,15 @@
     var id = 0;
     app.get('/readDate', function (req, res) {
         var connection = mysql.createConnection({
-            host: 'localhost',
-            user: 'root',
-            password: 'lz1349500382',
-            database: 'sheet2'
+            host: config.host,
+            user: config.username,
+            password: config.password,
+            database: config.database
         });
         connection.connect();
         //  connection.query('select GPS_LAT_CA,GPS_LONG_CA,ALT_STD,ROLL_RATE1 from fly order by Time desc ', function (err, data) {
         connection.query('select id, Time,WIN_SPD,VMAN,ALTBARFN,TAT,GPS_LAT_CA, GPS_LONG_CA, ALT_STD,FF1,EGT1C,N21,N22,N11,N12  from sheet1 where id>' + id + ' order by id asc LIMIT 0,1000 ', function (err, data) {
-        //connection.query('select id,translateX,translateY,translateZ,rotateX,rotateY,rotateZ from fly_wan where id>' + id + ' order by id asc LIMIT 0,1000 ', function (err, data) {
+            //connection.query('select id,translateX,translateY,translateZ,rotateX,rotateY,rotateZ from fly_wan where id>' + id + ' order by id asc LIMIT 0,1000 ', function (err, data) {
             //经度、纬度、高度、roll
             if (err) throw err;
             //   msg = data[0].GPS_LAT_CA;
@@ -249,10 +250,10 @@
             //  console.log("data.length:" + data.length);
             res.send(data);
             var now = new Date(new Date().getTime());
-            console.log("now:"+now);
+            console.log("now:" + now);
             console.log("data.length:" + data.length);
-            console.log("id:" +id);
-            
+            console.log("id:" + id);
+
             if (data.length != 0)
                 id = data[data.length - 1].id;
             //在此处又回到数据库开头
