@@ -5,6 +5,7 @@
     var compression = require('compression');
     var fs = require('fs');
     var url = require('url');
+    const config = require('./config');
     var request = require('request');
     var cors = require('cors');
     var bodyParser = require('body-parser');
@@ -165,8 +166,8 @@
             // console.log("avgfps", avgfps);
             const Sequelize = require('sequelize');
             ///const config = require('./config');
-            var sequelize = new Sequelize('adus', 'root', 'lz1349500382', {
-                host: 'localhost',
+            var sequelize = new Sequelize(config.database, config.username, config.password, {
+                host: config.host,
                 dialect: 'mysql',
                 pool: {
                     max: 5,
@@ -233,10 +234,10 @@
     var id = 0;
     app.get('/readDate', function (req, res) {
         var connection = mysql.createConnection({
-            host: 'localhost',
-            user: 'root',
-            password: 'lz1349500382',
-            database: 'sheet1'
+            host: config.host,
+            user: config.username,
+            password: config.password,
+            database: config.database
         });
         connection.connect();
         //  connection.query('select GPS_LAT_CA,GPS_LONG_CA,ALT_STD,ROLL_RATE1 from fly order by Time desc ', function (err, data) {
