@@ -115,7 +115,7 @@
 
             var globemap = Cesium.createTileMapServiceImageryProvider({
                 // url: 'http://localhost:8080/chinaimage/tiles',
-                url: 'http://localhost:8080/hainanimage/tiles',
+                url: 'http://localhost:8081/hainanimage/tiles',
                 fileExtension: 'png'
             });
             // Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhZGRkZjAwNi1iMjE3LTRjYmYtYTY1Mi1lOWNjMjliMjJkZmEiLCJpZCI6OTkxOSwic2NvcGVzIjpbImFzciIsImdjIl0sImlhdCI6MTU1NTI5NjM3MH0.znUeCbpM0T6NMJ5_CM59CJ2Be08zLglD73cxVq1acU0'
@@ -142,7 +142,7 @@
             viewer._cesiumWidget._creditContainer.style.display = "none";
             var terrainLayer = new Cesium.CesiumTerrainProvider({
                 //url: "http://localhost:8080/china",
-                url: "http://localhost:8080/hainan",
+                url: "http://localhost:8081/hainan",
 
             });
             myViewer = viewer
