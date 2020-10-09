@@ -12,23 +12,23 @@
 
 无人机飞行时视频：
 
-<video src="D:\cesium-min\video\Cesium Demo - Google Chrome 2019-07-12 14-05-19.mp4"></video>
+<video src="https://gitee.com/KivenGood/uav-simulation/raw/master/video.mp4"></video>
 
 无人机飞行图片
 
-![1](D:\cesium-min\image\1.png)
+![1](https://gitee.com/KivenGood/uav-simulation/raw/master/image/1.png)
 
 主页启动图片：
 
-![2](D:\cesium-min\image\2.png)
+![2](https://gitee.com/KivenGood/uav-simulation/raw/master/image/2.png)
 
-![3](D:\cesium-min\image\3.png)
+![3](https://gitee.com/KivenGood/uav-simulation/raw/master/image/3.png)
 
 无人机状态显示：
 
-![4](D:\cesium-min\image\4.png)
+![4](https://gitee.com/KivenGood/uav-simulation/raw/master/image/4.png)
 
-![5](D:\cesium-min\image\5.png)
+![5]https://gitee.com/KivenGood/uav-simulation/raw/master/image/5.png)
 
-![6](D:\cesium-min\image\6.png)
+![6](https://gitee.com/KivenGood/uav-simulation/raw/master/image/6.png)
 
