@@ -12,7 +12,7 @@
 
 无人机飞行时动图：
 
-![7](https://gitee.com/KivenGood/uav-simulation/raw/master/image/7.png)
+![7](https://gitee.com/KivenGood/uav-simulation/raw/master/image/7.gif)
 
 无人机飞行图片
 
