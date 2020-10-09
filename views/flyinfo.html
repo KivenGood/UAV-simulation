@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>flyinfo</title>
+    <link rel="stylesheet" href="../public/css/reset.css">
+    <script type="text/javascript" src="../public/js/echarts.min.js"></script>
+    <script type="text/javascript" src="../public/js/jquery.min.js"></script>
+
+
+    <style>
+        body {
+            width: 100%;
+            height: 100%;
+        }
+        
+        #data_content {
+            width: 100%;
+            height: 100%;
+            background-color: #161719;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .info_title {
+            height: 10%;
+            background-color: #212124;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .title {
+            font-size: 50px;
+            color: #D8D9DA;
+            font-weight: bold;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            text-align: center;
+            margin: auto;
+            letter-spacing: 22px;
+        }
+        
+        .angel_content {
+            display: flex;
+            flex-direction: row;
+            margin-top: 10px;
+            height: 40%;
+            justify-content: space-between;
+        }
+        
+        .yaw_echarts {
+            width: 33%;
+            background-color: #212124;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /*  height: 400px; */
+            /* line-height: 400px; */
+        }
+        
+        .pitch_echarts {
+            width: 32.8%;
+            background-color: #212124;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* line-height: 400px; */
+        }
+        
+        .roll_echarts {
+            width: 33%;
+            background-color: #212124;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* line-height: 400px; */
+        }
+        
+        #yaw_angel {
+            height: 120%;
+            width: 120%;
+        }
+        
+        #pitch_angel {
+            height: 120%;
+            width: 120%;
+        }
+        
+        #roll_angel {
+            height: 120%;
+            width: 120%;
+        }
+        
+        .coordinate_content {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 50%;
+            margin-top: 10px;
+            justify-content: space-between;
+        }
+        
+        .lat_echarts {
+            width: 22.6%;
+            background-color: #212124;
+            /*       margin-top: 20px; */
+        }
+        
+        .speed_echarts {
+            width: 53.5%;
+            background-color: #212124;
+            /*       margin-top: 20px; */
+        }
+        
+        .long_echarts {
+            width: 22.6%;
+            background-color: #212124;
+            /*       margin-top: 20px; */
+        }
+        
+        #long {
+            height: 100%;
+            width: 100%;
+        }
+        
+        #lat {
+            height: 100%;
+            width: 100%;
+        }
+        
+        #speed {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+
+    <body>
+
+
+        <div id="data_content">
+            <div class="info_title">
+                <div class="title">导航数据</div>
+            </div>
+
+            <div class="angel_content">
+
+                <div class="yaw_echarts">
+                    <div id="yaw_angel"></div>
+                </div>
+                <div class="pitch_echarts">
+                    <div id="pitch_angel">123</div>
+                </div>
+                <div class="roll_echarts">
+                    <div id="roll_angel"></div>
+                </div>
+            </div>
+
+            <div class="coordinate_content">
+
+                <div class="lat_echarts">
+                    <div id="lat"></div>
+                </div>
+                <div class="speed_echarts">
+                    <div id="speed"></div>
+                </div>
+                <div class="long_echarts">
+                    <div id="long"></div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            var heightMsg = [0]; //标准气压高度
+            var yawMsg = [0]; //偏航角
+            var pitchMsg = [0]; //俯仰角
+            var rollMsg = [0]; //翻滚角
+            var windMsg = [0];
+            var speedMsg = [0];
+            var waterMsg = [0];
+            var gasMsg = [0];
+            var longitudeMsg = [0];
+            var latitudeMsg = [0];
+
+            var msg = {
+                tempLng: 0,
+                tempLat: 0,
+                tempPitch: 0,
+                tempHeight: 0,
+                tempYaw: 0,
+                tempRoll: 0,
+                tempGas: 0,
+                tempSpeed: 0,
+                tempWind: 0,
+                tempWater: 0
+            };
+
+            var yangelDom = document.getElementById("yaw_angel");
+            var yangelChart = echarts.init(yangelDom);
+
+            var pangelDom = document.getElementById("pitch_angel");
+            var pangelChart = echarts.init(pangelDom);
+
+            var rangelDom = document.getElementById("roll_angel");
+            var rangelChart = echarts.init(rangelDom);
+
+            var speedDom = document.getElementById("speed");
+            var speedChart = echarts.init(speedDom);
+
+            var latDom = document.getElementById("lat");
+            var latChart = echarts.init(latDom);
+
+            var longDom = document.getElementById("long");
+            var longChart = echarts.init(longDom);
+
+            var timeMsg = [];
+            var longitudeMsg = [0];
+            var latitudeMsg = [0];
+
+            var yangelOption = {
+
+                tooltip: {
+                    formatter: "{a} <br/>{b} : {c}°"
+                },
+
+                series: [{
+                    name: '偏航角',
+                    center: ['50%', '55%'],
+                    type: 'gauge',
+                    detail: {
+                        formatter: '{value}°'
+                    },
+                    axisLine: { // 坐标轴线
+                        lineStyle: { // 属性lineStyle控制线条样式
+                            width: 12
+                        }
+                    },
+                    axisLabel: {
+
+                        fontSize: 22,
+
+                    },
+                    title: {
+                        offsetCenter: [0, '-20%'], // x, y，单位px
+                        fontSize: 25,
+                        color: '#D8D9DA',
+
+                    },
+
+                    data: [{
+                        value: yawMsg,
+                        name: '偏航角'
+                    }]
+                }]
+
+            };
+            var pangelOption = {
+
+                tooltip: {
+                    formatter: "{a} <br/>{b} : {c}°"
+                },
+
+                series: [{
+                        name: '俯仰角',
+                        type: 'gauge',
+                        center: ['50%', '55%'],
+                        detail: {
+                            formatter: '{value}°'
+                        },
+                        axisLine: { // 坐标轴线
+                            lineStyle: { // 属性lineStyle控制线条样式
+                                width: 12
+                            }
+                        },
+                        title: {
+                            offsetCenter: [0, '-20%'], // x, y，单位px
+                            fontSize: 25,
+                            color: '#D8D9DA',
+                            //  fontWeight: 'bolder',
+                            //fontWeight: 'bolder',
+                        },
+                        axisLabel: {
+
+                            fontSize: 22,
+
+                        },
+                        title: {
+                            offsetCenter: [0, '-20%'], // x, y，单位px
+                            fontSize: 25,
+                            color: '#D8D9DA',
+                            //  fontWeight: 'bolder',
+                            //fontWeight: 'bolder',
+                        },
+
+                        data: [{
+                            value: 50,
+                            name: '俯仰角'
+                        }]
+                    }
+
+                ]
+
+            };
+            var rangelOption = {
+
+                tooltip: {
+                    formatter: "{a} <br/>{b} : {c}°"
+                },
+
+                series: [{
+                        name: '横滚角',
+                        type: 'gauge',
+                        center: ['50%', '55%'],
+                        detail: {
+                            formatter: '{value}°'
+                        },
+                        axisLine: { // 坐标轴线
+                            lineStyle: { // 属性lineStyle控制线条样式
+                                width: 12
+                            }
+                        },
+                        axisLabel: {
+
+                            fontSize: 22,
+
+                        },
+                        title: {
+                            offsetCenter: [0, '-20%'], // x, y，单位px
+                            fontSize: 25,
+                            color: '#D8D9DA',
+                            fontWeight: 'bolder',
+                            //fontWeight: 'bolder',
+                        },
+
+                        data: [{
+                            value: 50,
+                            name: '横滚角'
+                        }]
+                    }
+
+                ]
+
+
+
+
+
+            };
+
+            var latOption = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{b} : {c}°"
+                },
+                color: ['#FE8182', '#7ED4D5', '#FFC67D'],
+                series: [{
+                    name: '经度',
+                    type: 'pie',
+                    center: ['50%', '55%'], // 饼图的圆心坐标
+                    radius: ['70%', '80%'],
+                    avoidLabelOverlap: false,
+                    hoverAnimation: false,
+                    label: { //  饼图图形上的文本标签
+
+                        normal: { // normal 是图形在默认状态下的样式
+                            show: true,
+                            position: 'center',
+                            color: '#D8D9DA',
+                            fontSize: 25,
+                            fontWeight: 'bold',
+                            formatter: '{b} : {c}°' // 
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            show: false
+                        }
+                    },
+                    data: [{
+                            value: longitudeMsg,
+                            name: "经度",
+                            label: {
+                                normal: {
+                                    show: true
+                                }
+                            }
+                        },
+
+                    ]
+                }]
+            };
+
+            var longOption = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{b} : {c}°"
+                },
+                color: ['#FE8182', '#7ED4D5', '#FFC67D'],
+                series: [{
+                    name: '纬度',
+                    color: ['#FE8182', '#7ED4D5', '#FFC67D'],
+                    type: 'pie',
+                    center: ['50%', '55%'], // 饼图的圆心坐标
+                    radius: ['70%', '80%'],
+                    avoidLabelOverlap: false,
+                    hoverAnimation: false,
+                    label: { //  饼图图形上的文本标签
+                        normal: { // normal 是图形在默认状态下的样式
+                            show: true,
+                            position: 'center',
+                            color: '#D8D9DA',
+                            fontSize: 25,
+                            fontWeight: 'bold',
+                            formatter: '{b} : {c}°' // {b}:数据名； {c}：数据值； {d}：百分比，可以自定义显示内容，
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            show: false
+                        }
+                    },
+                    data: [{
+                            value: latitudeMsg,
+                            name: "纬度",
+                            label: {
+                                normal: {
+                                    show: true
+                                }
+                            }
+                        },
+
+                    ]
+                }]
+            };
+
+
+            var speedOption = {
+                tooltip: { //弹窗组件
+                    formatter: "{a} <br/>{c} {b}"
+                },
+                series: [{
+                        name: '风速',
+                        type: 'gauge',
+                        center: ['22%', '55%'], // 默认全局居中
+                        radius: '63%',
+                        min: 0,
+                        max: 80,
+                        endAngle: 50,
+                        splitNumber: 8,
+                        axisLine: { // 坐标轴线
+                            lineStyle: { // 属性lineStyle控制线条样式
+                                width: 8
+                            }
+                        },
+                        axisTick: { // 坐标轴小标记
+                            length: 8, // 属性length控制线长
+                            lineStyle: { // 属性lineStyle控制线条样式
+                                color: 'auto',
+                                width: 1
+
+                            }
+                        },
+                        splitLine: { // 分隔线
+                            length: 12, // 属性length控制线长
+                            lineStyle: { // 属性lineStyle（详见lineStyle）控制线条样式
+                                color: 'auto',
+                                width: 1.5
+                            }
+                        },
+                        pointer: {
+                            width: 2.5
+                        },
+                        axisLabel: {
+
+                            fontSize: 12,
+
+                        },
+                        title: {
+                            offsetCenter: [0, '-20%'], // x, y，单位px
+                            fontSize: 25,
+                            color: '#D8D9DA',
+                            fontWeight: 'bolder',
+                            //fontWeight: 'bolder',
+                        },
+                        detail: {
+                            // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                            fontSize: 40,
+                            //fontWeight:'border'
+
+                        },
+                        data: [{
+                            value: windMsg,
+                            name: '风速（m/s）',
+
+                        }]
+                    }, {
+                        name: '油表',
+                        type: 'gauge',
+                        center: ['87%', '50%'], // 默认全局居中
+                        radius: '48%',
+                        min: 0,
+                        max: 12,
+                        startAngle: 135,
+                        endAngle: 45,
+                        splitNumber: 2,
+                        axisLine: { // 坐标轴线
+                            lineStyle: { // 属性lineStyle控制线条样式
+                                width: 6
+                            }
+                        },
+                        axisTick: { // 坐标轴小标记
+                            splitNumber: 5,
+                            length: 12, // 属性length控制线长
+                            lineStyle: { // 属性lineStyle控制线条样式
+                                color: 'auto',
+                                width: 2
+                            }
+                        },
+                        axisLabel: {
+
+                            fontSize: 18,
+                        },
+                        splitLine: { // 分隔线
+                            length: 10, // 属性length控制线长
+                            lineStyle: { // 属性lineStyle（详见lineStyle）控制线条样式
+                                color: 'auto',
+                                width: 0.9
+                            }
+                        },
+                        pointer: {
+                            width: 2
+                        },
+                        title: {
+
+                            offsetCenter: [0, '-30%'], // x, y，单位px
+                            fontSize: 15,
+                            color: '#D8D9DA',
+                            fontWeight: 'bolder',
+
+                        },
+                        detail: {
+                            show: false
+                        },
+                        data: [{
+                            value: gasMsg,
+                            name: '全空温(℃)'
+                        }]
+                    }, {
+                        name: '水表',
+                        type: 'gauge',
+                        center: ['87%', '52%'], // 默认全局居中
+                        radius: '48%',
+                        min: 0,
+                        max: 600,
+                        startAngle: 315,
+                        endAngle: 225,
+                        splitNumber: 2,
+                        axisLine: { // 坐标轴线
+                            lineStyle: { // 属性lineStyle控制线条样式
+                                width: 8
+                            }
+                        },
+                        axisTick: { // 坐标轴小标记
+                            show: false
+                        },
+                        axisLabel: {
+
+                            fontSize: 18,
+                        },
+                        splitLine: { // 分隔线
+                            length: 18, // 属性length控制线长
+                            lineStyle: { // 属性lineStyle（详见lineStyle）控制线条样式
+                                color: 'auto',
+                                width: 1.5
+                            }
+                        },
+                        pointer: {
+                            width: 2.5
+                        },
+                        title: {
+
+                            offsetCenter: [0, '30%'], // x, y，单位px
+                            fontSize: 15,
+                            color: '#D8D9DA',
+                            fontWeight: 'bolder',
+                        },
+                        detail: {
+                            show: false
+                        },
+                        data: [{
+                            value: waterMsg,
+                            name: '燃料温度(℃)'
+                        }]
+                    }, {
+                        name: '速度',
+                        type: 'gauge',
+                        z: 3,
+                        min: 100,
+                        max: 600,
+                        center: ['55%', '56%'],
+                        splitNumber: 10,
+                        radius: '100%',
+                        axisLine: { // 坐标轴线
+                            lineStyle: { // 属性lineStyle控制线条样式
+                                width: 15,
+                            }
+                        },
+                        axisTick: { // 坐标轴小标记
+                            length: 25, // 属性length控制线长
+                            lineStyle: { // 属性lineStyle控制线条样式
+                                color: 'auto',
+                                width: 1.5
+                            }
+                        },
+                        pointer: {
+                            width: 4
+                        },
+                        splitLine: { // 分隔线
+                            length: 35, // 属性length控制线长
+                            lineStyle: { // 属性lineStyle（详见lineStyle）控制线条样式
+                                color: 'auto',
+                                width: 2.5
+
+                            }
+                        },
+                        axisLabel: {
+                            fontSize: 19
+                        },
+                        title: {
+                            // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                            fontWeight: 'bolder',
+                            fontSize: 28,
+                            // fontStyle: 'italic'
+                            offsetCenter: [0, '-20%'],
+                            color: '#D8D9DA',
+                        },
+                        detail: {
+                            fontSize: 45,
+                            borderRadius: 3,
+                            backgroundColor: '#444',
+                            borderColor: '#aaa',
+                            shadowBlur: 5,
+                            shadowColor: '#333',
+                            shadowOffsetX: 0,
+                            shadowOffsetY: 0,
+                            borderWidth: 1,
+                            textBorderColor: '#000',
+                            textBorderWidth: 0,
+                            textShadowBlur: 0,
+                            textShadowColor: '#fff',
+                            textShadowOffsetX: 0,
+                            textShadowOffsetY: 0,
+                            fontFamily: 'Arial',
+                            width: 120,
+                            height: 45,
+                            color: '#eee',
+                            rich: {},
+                            x: 'center',
+                            y: 'center'
+                        },
+                        data: [{
+                            value: speedMsg,
+                            name: '飞行速度（km/s）'
+                        }]
+                    },
+
+
+                ]
+            };
+
+            // function addData() {
+            //     //console.log(cnn);
+            //     var obj = new XMLHttpRequest();
+            //     obj.open("GET", "/readDate", true);
+            //     obj.setRequestHeader("Content-Type", "application/json");
+            //     obj.onreadystatechange = function() {
+            //         if (obj.readyState == 4 && (obj.status == 200)) {
+            //             var data = JSON.parse(obj.responseText);
+            //             //var yawMsg = [0]; //偏航角
+            //             //var pitchMsg = [0]; //俯仰角
+            //             //var rollMsg = [0]; //翻滚角
+            //             var pitch = data[0].ALT_STD;
+
+            //             var longitude = data[0].GPS_LONG_CA;
+            //             var latitude = data[0].GPS_LAT_CA;
+
+            //             var windSpeed = data[0].WIN_SPD;
+            //             var speed = data[0].VMAN;
+            //             var longitude = data[0].GPS_LONG_CA;
+            //             var latitude = data[0].GPS_LAT_CA;
+            //             var water = data[0].TAT;
+            //             var gas = data[0].ALTBARFN;
+
+            //             windMsg.push(windSpeed);
+            //             windMsg.shift();
+
+            //             speedMsg.push(speed);
+            //             speedMsg.shift();
+
+            //             waterMsg.push(water);
+            //             waterMsg.shift();
+
+            //             gasMsg.push(gas);
+            //             gasMsg.shift();
+            //             longitudeMsg.push(longitude);
+            //             longitudeMsg.shift();
+
+            //             latitudeMsg.push(latitude);
+            //             latitudeMsg.shift();
+
+
+
+
+            //         }
+            //     }
+            //     obj.send();
+            // }
+
+            if (yangelOption && pangelOption && rangelOption && speedOption && latOption && longOption && typeof yangelOption === "object" && typeof pangelOption === "object" && typeof rangelOption === "object" && typeof pangelOption === "object" && typeof speedOption === "object" && typeof longOption === "object" && typeof latOption === "object") {
+                for (ite = 0; ite < 9000; ite++) {
+                    setInterval(function() {
+                        msg = JSON.parse(localStorage.getItem("msg"));
+
+
+                        var yaw = msg.YD_ORDER; //偏航角
+                        console.log(yaw);
+                        var pitch = msg.tempPitch; //俯仰角
+                        var roll = msg.tempRoll; //翻滚角
+                        var wind = msg.WIN_SPD;
+                        var speed = msg.VMAN;
+                        var water = msg.EGT1C;
+                        var gas = msg.TAT;
+                        var longitude = msg.GPS_LONG_CA;
+                        var latitude = msg.GPS_LAT_CA;
+
+
+                        // console.log(heightMsg, yawMsg, pitchMsg, rollMsg, windMsg, speedMsg, waterMsg, gasMsg, longitudeMsg, latitudeMsg);
+
+
+
+                        yawMsg.push(yaw);
+                        yawMsg.shift();
+                        pitchMsg.push(pitch);
+                        pitchMsg.shift();
+                        rollMsg.push(roll);
+                        rollMsg.shift();
+                        windMsg.push(wind);
+                        windMsg.shift();
+                        speedMsg.push(speed);
+                        speedMsg.shift();
+                        waterMsg.push(water);
+                        waterMsg.shift();
+                        gasMsg.push(gas);
+                        gasMsg.shift();
+                        longitudeMsg.push(longitude);
+                        longitudeMsg.shift();
+                        latitudeMsg.push(latitude);
+                        latitudeMsg.shift();
+
+                        yangelChart.setOption(yangelOption);
+                        pangelChart.setOption(pangelOption);
+                        rangelChart.setOption(rangelOption);
+                        speedChart.setOption(speedOption);
+                        longChart.setOption(longOption);
+                        latChart.setOption(latOption);
+                    }, 1000 + 1000 * ite);
+                }
+            }
+        </script>
+
+    </body>
+
+</html>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- meta 提供有关页面的元信息（meta-information） -->
+    <!-- <meta> 标签的属性定义了与文档相关联的名称/值对 -->
+    <meta charset="utf-8">
+
+    <!-- 把 content 属性关联到 HTTP 头部 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- 把 content 属性关联到一个名称 -->
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+
+    <!-- 包含按键函数和弧度度转换函数 -->
+    <script src="myCesiumheader.js"></script>
+    <title>Cesium</title>
+    <script type="text/javascript" src="Sandcastle-header.js"></script>
+    <script type="text/javascript" src="ThirdParty/require.js"></script>
+    <script type="text/javascript">
+        if (typeof require === 'function') {
+            require.config({
+                //   改变基目录为Source
+                //   main.js在该目录下（主模块）   
+                //   main.js 依赖于子模块 Cesium.js 也在该目录下
+                baseUrl: '../../Source',
+
+                //加载超时  超过该时间则认为加载失败 
+                waitSeconds: 120
+            });
+        }
+    </script>
+</head>
+
+<!-- HTML5规范要求所有的用户自定义属性以"data-"开头 -->
+<!-- 用来实现一些HTML里没有明确定义的元素,把用户自定义的属性应用到代码中 -->
+
+<body class="sandcastle-loading" data-sandcastle-bucket="bucket-requirejs.html">
+    <style>
+        /* 指定导入的外部样式表及目标媒体 */
+        /* 该规则必须在样式表头部最先声明，并且其后的分号是必需的 */
+        /* 机制是不同于link的，link是在加载页面前把css加载完毕
+                                    而@import url（）则是读取完文件后在加载
+                                    所以会出现一开始没有css样式，闪烁一下出现样式后的页面(网速慢的情况下) */
+
+        @import url(templates/bucket.css);
+    </style>
+    <div id="cesiumContainer" class="fullSize"></div>
+    <div id="loadingOverlay">
+        <h1>Loading...</h1>
+    </div>
+
+    <!-- 工具栏 -->
+    <div id="toolbar" style="position:absolute;top:0px;left:0px;z-index:300;">
+        <div id="msg">msg</div>
+        <div id="msg1">msg1</div>
+        <div id="msg2">msg2</div>
+        <div id="msg3">msg3</div>
+        <div id="msg4">msg4</div>
+        <div id="msg5">msg5</div>
+        <div id="msg6">msg6</div>
+        <div id="msg7">msg7</div>
+
+
+
+        <br />
+    </div>
+
+
+    <script id="cesium_sandcastle_script">
+        //随机定义一个位置，放置飞机
+        var lat = 18.5;
+        lng = 109;
+        // lng = 116.355,
+        //  lat = 40,
+        height = 2000.0,
+            heading = 0,
+            pitch = 0,
+            roll = 0
+
+        //定义飞行过程中的六自由度参数,飞行过程中，参数实时更新，经度，维度，高度，偏航角，俯仰角，滚转角
+        var tempLng, tempLat, temp, tempHeight, tempHeading, tempPitch, tempRoll
+
+        //读数据
+        readData();
+        tempLng = 0;
+        tempLat = 0;
+        tempHeight = 0;
+        tempHeading = 0;
+        tempPitch = 0;
+        tempRoll = 0;
+        //左右和上下移动时对速度有影响，用correction去修正速度
+        var correction = 1;
+
+        //全局实体
+        var myEntity, myEntity2, myCesium, myViewer
+        //用这个数组缓存数据库过来的参数
+        var msg = new Array();
+        //用来防止异步请求
+        var state = 0;
+        //全局步长参数
+        //  var step = 0.0001
+
+        //清除上次保存的msg参数
+        localStorage.removeItem("msg");
+        //全局变量标识
+        //停止飞行变量和飞机模型变量
+        var pauseFlag = 0,
+            planeFlag = 0;
+
+        function startup(Cesium) {
+            'use strict';
+            //Sandcastle_Begin CesiumTerrainProvider
+
+            var globemap = Cesium.createTileMapServiceImageryProvider({
+                // url: 'http://localhost:8080/chinaimage/tiles',
+                url: 'http://localhost:8080/hainanimage/tiles',
+                fileExtension: 'png'
+            });
+            // Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhZGRkZjAwNi1iMjE3LTRjYmYtYTY1Mi1lOWNjMjliMjJkZmEiLCJpZCI6OTkxOSwic2NvcGVzIjpbImFzciIsImdjIl0sImlhdCI6MTU1NTI5NjM3MH0.znUeCbpM0T6NMJ5_CM59CJ2Be08zLglD73cxVq1acU0'
+            var viewer = new Cesium.Viewer('cesiumContainer', {
+                imageryProvider: globemap,
+                infoBox: false, //是否显示信息框
+                selectionIndicator: false, //是否显示选取指示器组件
+                shadows: true, //是否显示阴影
+                shouldAnimate: false, //
+                //scene3DOnly:true,
+                animation: false, //是否创建动画小器件，左下角仪表
+                baseLayerPicker: false, //地图切换控件(底图以及地形图)是否显示,默认显示true
+                geocoder: false, //地图查找
+                navigationHelpButton: false, //帮助按钮
+                fullscreenButton: false, //全屏按钮
+                homeButton: false, //主页按钮
+                sceneModePicker: false, //场景模式选择器
+                timeline: false, //时间线
+                creditContainer: document.getElementById("credit"),
+                shadows: false, //阴影
+                terrainShadows: false, //地形阴影
+            });
+            //隐藏版权信息
+            viewer._cesiumWidget._creditContainer.style.display = "none";
+            var terrainLayer = new Cesium.CesiumTerrainProvider({
+                //url: "http://localhost:8080/china",
+                url: "http://localhost:8080/hainan",
+
+            });
+            myViewer = viewer
+            myCesium = Cesium
+            myViewer.terrainProvider = terrainLayer;
+            //增加键盘事件监听
+            // viewer.clock.onTick.addEventListener(function (clock) {
+            //     mytestkey(viewer);
+            // });
+            addaircraft();
+            // createModelcreateModel('../../SampleData/models/CesiumAir/ch.gltf', viewer);
+
+            // 循环执行移动模型操作，移动频率为25次/秒
+            /*     var ite
+                 for (ite = 0; ite < 9000; ite++) {
+                     setTimeout("moveModel();", 8000 + 40 * ite);
+                     //  setTimeout("mysql();", 10000);//mysql设置的比较慢
+                 }
+     */
+            for (var ite = 0; ite < 9000; ite++) {
+                setTimeout("moveModel();", 1000 + 40 * ite);
+                //  setTimeout("mysql();", 10000);//mysql设置的比较慢
+            }
+
+            // setInterval(function () {
+            //     moveModel();
+            // }, 100);
+            console.log("tempLng" + tempLng);
+            console.log("tempLat" + tempLat);
+            console.log("tempHeight" + tempHeight);
+
+            //Sandcastle_End
+            //Sandcastle-header.js中定义函数
+            Sandcastle.finishedLoading();
+        }
+
+        function addaircraft() {
+
+            createModel('models/ch.gltf');
+
+            // createModel('models/Cesium_Air.gltf');
+
+        }
+        // var entity = myViewer.entities.add({
+        //     name: url,
+        //     position: position,
+        //     orientation: orientation,
+        //     model: {
+        //         uri: url,
+        //         minimumPixelSize: 128,
+        //         maximumScale: 20000,
+        //     },
+
+        // });
+
+
+        //创建模型，
+        function createModel(url) {
+            myViewer.entities.removeAll();
+            var position = myCesium.Cartesian3.fromDegrees(lng, lat, height);
+            var hpr = new myCesium.HeadingPitchRoll(heading, pitch, roll);
+            var orientation = myCesium.Transforms.headingPitchRollQuaternion(position, hpr);
+
+            var entity = myViewer.entities.add({
+                name: url,
+                position: position,
+                orientation: orientation,
+                model: {
+                    uri: url,
+                    minimumPixelSize: 128,
+                    maximumScale: 20000,
+                },
+
+            });
+            //将创建的模型定义为视角追踪对象
+            myEntity = entity
+            myViewer.trackedEntity = myEntity;
+
+            tempLng = lng
+            tempLat = lat
+            tempHeight = height
+            tempHeading = heading
+            tempPitch = pitch
+            tempRoll = roll
+        }
+
+
+        //替换模型，
+        function replaceModel(planeFlag) {
+            myViewer.entities.removeAll();
+            var position = myCesium.Cartesian3.fromDegrees(tempLng, tempLat, tempHeight);
+            var hpr = new myCesium.HeadingPitchRoll(tempHeading, tempPitch, tempRoll);
+            var orientation = myCesium.Transforms.headingPitchRollQuaternion(position, hpr);
+            if (planeFlag == 0) {
+                url = 'models/ch.gltf'
+
+            } else if (planeFlag == 1) {
+                url = 'models/Cesium_Air.gltf'
+
+            }
+            var entity = myViewer.entities.add({
+                name: url,
+                position: position,
+                orientation: orientation,
+                model: {
+                    uri: url,
+                    minimumPixelSize: 128,
+                    maximumScale: 20000
+                }
+            });
+            //将创建的模型定义为视角追踪对象
+            myEntity2 = entity;
+            // myViewer.trackedEntity = entity;
+            // orientation
+            //myViewer.trackedEntity = myEntity2;
+        }
+
+
+        //移动模型
+        function moveModel() {
+            //  tempLng += (step * correction);
+            // tempLat -= (step * Math.sin(tempHeading)); //主要用来左右移动
+
+            //tempLat += step
+
+            tempLat = +msg[0].GPS_LAT_CA - 10;
+            tempLng = +msg[0].GPS_LONG_CA - 3.5;
+            //  tempHeight = +msg[0].ALT_STD+1000;
+            tempHeight = 2000;
+            //  tempRoll = +msg[0].ROLL_RATE1;
+            localStorage.setItem("msg", JSON.stringify(msg[0]));
+            console.log("localStorage:" + JSON.stringify(JSON.parse(localStorage.getItem("msg"))));
+            console.log("msg.length1:" + msg.length);
+            console.log("***tempLng：" + tempLng);
+            console.log("***tempLat：" + tempLat);
+            console.log("***tempHeight：" + tempHeight);
+            console.log("***tempHeading：" + tempHeading);
+            console.log("***tempPitch：" + tempPitch);
+            console.log("*** tempRoll：" + tempRoll);
+            var position = myCesium.Cartesian3.fromDegrees(tempLng, tempLat, tempHeight);
+            var hpr = new myCesium.HeadingPitchRoll(tempHeading, tempPitch, tempRoll);
+            var orientation = myCesium.Transforms.headingPitchRollQuaternion(position, hpr);
+            myEntity.orientation = orientation;
+            myEntity.position = position;
+            msg.shift();
+            console.log("!!!!msg[0].id" + msg[0].id);
+            //受异步请求影响，state相当于一个锁，当数据请求结束才开锁
+            if (msg.length < 100 && state == 0) {
+                console.log("!!!!!!");
+                state = 1;
+                readData();
+            }
+            document.getElementById('msg').innerHTML = "tempLng:" + tempLng;
+            document.getElementById('msg1').innerHTML = "tempLat:" + tempLat;
+            document.getElementById('msg2').innerHTML = "tempPitch:" + tempPitch;
+            document.getElementById('msg3').innerHTML = "tempHeight:" + parseInt(tempHeight);
+            document.getElementById('msg4').innerHTML = "tempHeading:" + tempHeading;
+            document.getElementById('msg5').innerHTML = "tempRoll:" + tempRoll;
+            //    document.getElementById('msg6').innerHTML = "step:" + step;
+            document.getElementById('msg7').innerHTML = "correction:" + correction;
+        }
+
+        //读数据
+        function readData() {
+            var obj = new XMLHttpRequest();
+            obj.open("GET", "/readDate", true);
+            obj.setRequestHeader("Content-Type", "application/json");
+            obj.onreadystatechange = function () {
+                if (obj.readyState == 4 && (obj.status == 200)) {
+                    //concat方法在a数组为空时无法将b数组合并进a
+                    if (msg.length == 0)
+                        msg = JSON.parse(obj.responseText);
+                    else {
+                        var now = new Date(new Date().getTime());
+                        console.log("now:" + now);
+                        var msg1 = JSON.parse(obj.responseText);
+                        console.log("msg1.length:" + msg1.length);
+                        //将msg1放在msg的末尾，此语句结束才开锁
+                        msg = msg.concat(msg1);
+                        state = 0;
+                    }
+                    console.log("msg.length:" + msg.length);
+                }
+            }
+            obj.send();
+        }
+        /*
+          //存入数据库
+          function mysql() {
+              var myMsg = JSON.stringify({
+                  'tempLng': tempLng,
+                  'tempLat': tempLat,
+                  'tempHeight': tempHeight,
+                  'tempHeading': tempHeading,
+                  'tempPitch': tempPitch,
+                  'tempRoll': tempRoll,
+                  'correction': correction,
+              });
+              var obj = new XMLHttpRequest();
+              obj.open("POST", "/postData", true);
+              obj.setRequestHeader("Content-Type", "application/json");
+              obj.onreadystatechange = function () {
+                  if (obj.readyState == 4 && (obj.status == 200)) {
+                      console.log(obj.responseText);
+                  }
+              }
+              obj.send(myMsg);
+          }
+  */
+
+
+
+        if (typeof Cesium !== 'undefined') {
+            startup(Cesium);
+        } else if (typeof require === 'function') {
+            require(['Cesium'], startup);
+        }
+    </script>
+</body>
+
+</html>

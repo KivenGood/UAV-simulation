@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>line</title>
+    <link rel="shortcut icon" href="../favicon.ico" />
+    <link rel="stylesheet" href="../public/css/reset.css">
+    <script type="text/javascript" src="../public/js/echarts.min.js"></script>
+    <script type="text/javascript" src="../public/js/jquery.min.js"></script>
+
+
+    <style>
+        body {
+            height: 100%;
+            width: 100%;
+        }
+        
+        #data_content {
+            width: 100%;
+            height: 100%;
+            background-color: #161719;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .info_title {
+            height: 10%;
+            background-color: #212124;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .title {
+            font-size: 50px;
+            color: #D8D9DA;
+            font-weight: bold;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            letter-spacing: 22px;
+        }
+        
+        .wrap {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 90%;
+            margin-top: 10px;
+        }
+        
+        .engine_content {
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            margin-right: 10px;
+        }
+        
+        .engine_title {
+            height: 8%;
+            background-color: #212124;
+            font-size: 30px;
+            color: #D8D9DA;
+            font-weight: bold;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            letter-spacing: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .engine_echarts {
+            margin-top: 10px;
+            height: 100%;
+            background-color: #212124;
+        }
+        
+        #engine {
+            height: 100%;
+            width: 100%;
+        }
+        
+        .height_content {
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+        }
+        
+        .height_title {
+            height: 8%;
+            background-color: #212124;
+            font-size: 30px;
+            color: #D8D9DA;
+            font-weight: bold;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            letter-spacing: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .height_echarts {
+            margin-top: 10px;
+            background-color: #212124;
+            /*       margin-top: 20px; */
+            height: 100%;
+        }
+        
+        #height {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+
+    <body>
+
+
+        <div id="data_content">
+            <div class="info_title">
+                <div class="title">发动机相关数据</div>
+            </div>
+
+            <div class="wrap">
+
+                <div class="engine_content">
+                    <div class="engine_title">
+                        发动机转子转速
+                    </div>
+                    <div class="engine_echarts">
+                        <div id="engine"></div>
+                    </div>
+                </div>
+
+                <div class="height_content">
+                    <div class="height_title">
+                        标准气压高度
+                    </div>
+                    <div class="height_echarts">
+                        <div id="height"></div>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+        <script type="text/javascript">
+            var heightMsg = []; //标准气压高度
+
+
+            var highMsg = [0, 0];
+            var lowMsg = [0, 0];
+            var egDom = document.getElementById("engine");
+            var egChart = echarts.init(egDom);
+            var heightDom = document.getElementById("height");
+            var heightChart = echarts.init(heightDom);
+            var timeMsg = [];
+
+            var egOption = {
+
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                legend: {
+                    data: ['高压转子转数', '低压转子转数'],
+                    textStyle: {
+                        color: '#D8D9DA',
+                        fontSize: 20
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'value',
+
+                    boundaryGap: [0, 0.00001],
+                    axisLabel: {
+                        color: '#D8D9DA',
+                        fontSize: 20
+                    },
+                },
+                yAxis: {
+                    type: 'category',
+                    color: '#D8D9DA',
+                    data: ['发动机1', '发动机2', '发动机3', '发动机4'],
+                    axisLabel: {
+                        color: '#D8D9DA',
+                        fontSize: 20
+                    },
+                },
+                series: [{
+                    name: '高压转子转数',
+                    type: 'bar',
+                    data: [highMsg[0], highMsg[1], 2903, 10497]
+                }, {
+                    name: '低压转子转数',
+                    type: 'bar',
+                    data: [lowMsg[0], lowMsg[1], 3100, 1215],
+
+                }]
+            };
+
+            egChart.setOption(egOption);
+
+            var heightOption = {
+
+                tooltip: {
+                    trigger: 'axis',
+
+                    axisPointer: {
+                        animation: false
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    splitLine: {
+                        show: false
+                    },
+                    // splitNumber: 8,
+                    axisLabel: {
+                        color: '#D8D9DA',
+                        fontSize: 20
+                    },
+
+                },
+                yAxis: {
+                    type: 'value',
+                    boundaryGap: [0, '100%'],
+                    splitLine: {
+                        show: false
+                    },
+                    axisLabel: {
+                        color: '#D8D9DA',
+                        fontSize: 20
+                    },
+                    data: heightMsg
+                },
+                series: [{
+                    name: '标准气压高度',
+                    center: ['50%', '55%'],
+                    type: 'line',
+                    showSymbol: false,
+                    hoverAnimation: false,
+                    data: heightMsg
+
+                }]
+            };
+
+            heightChart.setOption(heightOption);
+
+
+
+            var h = new Array();
+            var t = new Array();
+
+
+
+            if (heightOption && egOption && typeof heightOption === "object" && typeof egOption === "object") {
+                for (ite = 0; ite < 9000; ite++) {
+                    setInterval(function() {
+
+                        var msg = JSON.parse(localStorage.getItem('msg'));
+                        //console.log(msg.Time);
+
+                        // console.log(t);
+                        var high1 = msg.N21;
+                        var high2 = msg.N22;
+
+                        var low1 = msg.N11;
+                        var low2 = msg.N12;
+
+
+                        highMsg.push(high1);
+                        highMsg.push(high2);
+                        console.log(highMsg);
+                        highMsg.shift();
+                        highMsg.shift();
+
+
+                        lowMsg.push(low1);
+                        lowMsg.push(low2);
+                        lowMsg.shift();
+                        lowMsg.shift();
+                        console.log(lowMsg);
+
+
+
+                        if (t.length < 10 && h.length < 10) {
+                            if (t[t.length - 1] != msg.Time) {
+                                t.push(msg.Time);
+                                h.push(msg.ALT_STD)
+                            }
+                            console.log(h);
+
+                        } else {
+                            if (t[t.length - 1] != msg.Time) {
+                                t.shift();
+                                h.shift();
+                                t.push(msg.Time);
+                                h.push(msg.ALT_STD)
+
+                            }
+                        }
+
+
+
+
+
+                        heightChart.setOption({
+                            xAxis: {
+                                data: t
+                            },
+                            series: [{
+                                data: h
+
+                            }]
+                        });
+                        egChart.setOption({
+                            series: [{
+                                name: '高压转子转数',
+                                type: 'bar',
+                                data: [highMsg[0], highMsg[1], 1, 1]
+                            }, {
+                                name: '低压转子转数',
+                                type: 'bar',
+                                data: [lowMsg[0], lowMsg[1], 1, 1],
+
+                            }]
+                        });
+
+                    }, 1000 + 1000 * ite);
+                }
+            }
+        </script>
+
+    </body>
+
+</html>

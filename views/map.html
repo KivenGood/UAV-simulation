@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>map</title>
+    <link rel="stylesheet" href="../public/css/flipclock.css">
+    <link rel="stylesheet" href="../public/css/reset.css">
+    <script type="text/javascript" src="../public/js/echarts.min.js"></script>
+    <script type="text/javascript" src="../public/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../public/js/bmap.min.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=odbMAw8vrgv2G77HFno0aoWwzKwlFfvP"></script>
+   <!-- <script type="text/javascript" src="../public/js/china.js"></script> -->
+    <style>
+        body {
+            height: 100%;
+            width: 100%;
+        }
+        
+        #data_content {
+            width: 100%;
+            height: 100%;
+            background-color: #161719;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+        
+        .info_title {
+            height: 10%;
+            background-color: #212124;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .title {
+            font-size: 50px;
+            color: #D8D9DA;
+            font-weight: bold;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            letter-spacing: 22px;
+        }
+        
+        .map_content {
+            width: 100%;
+            height: 90%;
+        }
+        
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+
+    <body>
+        <div id="data_content">
+            <div class="info_title">
+                <div class="title">飞行路线</div>
+            </div>
+            <div class="map_content">
+                <div id="map"></div>
+            </div>
+
+        </div>
+        <script type="text/javascript">
+            var pathMsg = [0, 0, 0, 0];
+
+            var mapDom = document.getElementById("map");
+            var mapChart = echarts.init(mapDom);
+            var planePath = 'path://M1705.06,1318.313v-89.254l-319.9-221.799l0.073-208.063c0.521-84.662-26.629-121.796-63.961-121.491c-37.332-0.305-64.482,36.829-63.961,121.491l0.073,208.063l-319.9,221.799v89.254l330.343-157.288l12.238,241.308l-134.449,92.931l0.531,42.034l175.125-42.917l175.125,42.917l0.531-42.034l-134.449-92.931l12.238-241.308L1705.06,1318.313z';
+            /* 
+                        function addData() {
+                            //console.log(cnn);
+                            var obj = new XMLHttpRequest();
+                            obj.open("GET", "/readDate", true);
+                            obj.setRequestHeader("Content-Type", "application/json");
+                            obj.onreadystatechange = function() {
+                                if (obj.readyState == 4 && (obj.status == 200)) {
+                                    var data = JSON.parse(localStorage.getItem('msg'));
+
+                                    var slat = data.GPS_LAT_CA;
+                                    var slong = data[0].GPS_LONG_CA;
+
+                                    var elat = data[300].GPS_LAT_CA;
+                                    var elong = data[300].GPS_LONG_CA;
+
+                                    pathMsg.shift();
+                                    pathMsg.shift();
+                                    pathMsg.shift();
+                                    pathMsg.shift();
+                                    pathMsg.push(slat);
+                                    pathMsg.push(slong);
+                                    pathMsg.push(elat);
+                                    pathMsg.push(elong);
+                                }
+                            }
+                            obj.send();
+                        }
+             */
+            let convertData = function() {
+                let res = [];
+                console.log(lat0, long0);
+
+                for (let i = 0; i < pathMsg.length; i++) {
+                    res.push({
+
+                        coords: [
+                            [long0, lat0],
+                            [long1, lat1],
+
+                        ]
+                    });
+                }
+                return res;
+            };
+
+
+
+            var mapOption = {
+                tooltip: {
+                    show: true,
+                    trigger: 'item',
+                    hideDelay: 4000,
+
+                },
+                bmap: {
+
+                    center: [112.98626, 28.25591],
+                    zoom: 12,
+                    roam: true,
+                    mapStyle: {
+                        styleJson: [{
+                            'featureType': 'land', //调整土地颜色
+                            'elementType': 'geometry',
+                            'stylers': {
+                                'color': '#081734'
+                            }
+                        }, {
+                            'featureType': 'building', //调整建筑物颜色
+                            'elementType': 'geometry',
+                            'stylers': {
+                                'color': '#04406F'
+                            }
+                        }, {
+                            'featureType': 'building', //调整建筑物标签是否可视
+                            'elementType': 'labels',
+                            'stylers': {
+                                'visibility': 'off'
+                            }
+                        }, {
+                            'featureType': 'highway', //调整高速道路颜色
+                            'elementType': 'geometry',
+                            'stylers': {
+                                'color': '#015B99'
+                            }
+                        }, {
+                            'featureType': 'highway', //调整高速名字是否可视
+                            'elementType': 'labels',
+                            'stylers': {
+                                'visibility': 'off'
+                            }
+                        }, {
+                            'featureType': 'arterial', //调整一些干道颜色
+                            'elementType': 'geometry',
+                            'stylers': {
+                                'color': '#003051'
+                            }
+                        }, {
+                            'featureType': 'arterial',
+                            'elementType': 'labels',
+                            'stylers': {
+                                'visibility': 'off'
+                            }
+                        }, {
+                            'featureType': 'green',
+                            'elementType': 'geometry',
+                            'stylers': {
+                                'visibility': 'off'
+                            }
+                        }, {
+                            'featureType': 'water',
+                            'elementType': 'geometry',
+                            'stylers': {
+                                'color': '#044161'
+                            }
+                        }, {
+                            'featureType': 'subway', //调整地铁颜色
+                            'elementType': 'geometry.stroke',
+                            'stylers': {
+                                'color': '#003051'
+                            }
+                        }, {
+                            'featureType': 'subway',
+                            'elementType': 'labels',
+                            'stylers': {
+                                'visibility': 'off'
+                            }
+                        }, {
+                            'featureType': 'railway',
+                            'elementType': 'geometry',
+                            'stylers': {
+                                'visibility': 'off'
+                            }
+                        }, {
+                            'featureType': 'railway',
+                            'elementType': 'labels',
+                            'stylers': {
+                                'visibility': 'off'
+                            }
+                        }, {
+                            'featureType': 'all', //调整所有的标签的边缘颜色
+                            'elementType': 'labels.text.stroke',
+                            'stylers': {
+                                'color': '#313131'
+                            }
+                        }, {
+                            'featureType': 'all', //调整所有标签的填充颜色
+                            'elementType': 'labels.text.fill',
+                            'stylers': {
+                                'color': '#FFFFFF'
+                            }
+                        }, {
+                            'featureType': 'manmade',
+                            'elementType': 'geometry',
+                            'stylers': {
+                                'visibility': 'off'
+                            }
+                        }, {
+                            'featureType': 'manmade',
+                            'elementType': 'labels',
+                            'stylers': {
+                                'visibility': 'off'
+                            }
+                        }, {
+                            'featureType': 'local',
+                            'elementType': 'geometry',
+                            'stylers': {
+                                'visibility': 'off'
+                            }
+                        }, {
+                            'featureType': 'local',
+                            'elementType': 'labels',
+                            'stylers': {
+                                'visibility': 'off'
+                            }
+                        }, {
+                            'featureType': 'subway',
+                            'elementType': 'geometry',
+                            'stylers': {
+                                'lightness': -65
+                            }
+                        }, {
+                            'featureType': 'railway',
+                            'elementType': 'all',
+                            'stylers': {
+                                'lightness': -40
+                            }
+                        }, {
+                            'featureType': 'boundary',
+                            'elementType': 'geometry',
+                            'stylers': {
+                                'color': '#8b8787',
+                                'weight': '1',
+                                'lightness': -29
+                            }
+                        }]
+                    },
+
+                },
+
+                series: [{
+                        /* name: '北京', */
+                        type: 'lines',
+                        zlevel: 5,
+                        coordinateSystem: 'bmap',
+                        effect: {
+                            show: true,
+                            period: 20,
+                            trailLength: 0.7,
+                            symbol: planePath,
+                            symbolSize: 12
+                        },
+                        lineStyle: {
+                            normal: {
+                                color: 'red',
+                                width: 0.2,
+                                opacity: 0.4,
+                                curveness: 0.2
+                            }
+                        },
+
+                    },
+
+                ]
+
+
+            };
+            mapChart.setOption(mapOption);
+
+            var long0 = 0;
+            var lat0 = 0;
+            var lat1 = 0;
+            var long1 = 0;
+
+            if (mapOption && typeof mapOption === "object") {
+                for (ite = 0; ite < 9000; ite++) {
+                    setInterval(function() {
+                        var msg = JSON.parse(localStorage.getItem('msg'));
+                        // console.log(msg.GPS_LAT_CA, msg.GPS_LONG_CA);
+                        if (long0 == 0) {
+                            long0 = msg.GPS_LONG_CA;
+                            lat0 = msg.GPS_LAT_CA;
+
+                        }
+                        long1 = msg.GPS_LONG_CA;
+                        lat1 = msg.GPS_LAT_CA;
+
+                        // if (long.length < 2 && lat.length < 2) {
+                        //     if (long[long.length - 1] != msg.GPS_LONG_CA) {
+                        //         long.push(msg.GPS_LONG_CA);
+                        //         lat.push(msg.GPS_LAT_CA);
+                        //         lat1 = msg.GPS_LAT_CA;
+                        //         long1 = msg.GPS_LONG_CA;
+                        //     }
+                        // } else if (long[long.length - 1] != msg.GPS_LONG_CA) {
+                        //     long.shift();
+                        //     lat.shift();
+                        //     long.push(msg.GPS_LONG_CA);
+                        //     lat.push(msg.GPS_LAT_CA);
+
+                        // }
+                        //   console.log(long, lat);
+                        mapChart.setOption({
+                            series: [{
+                                type: 'lines',
+                                data: convertData()
+
+                            }, ]
+                        });
+
+                    }, 1000 + 1000 * ite);
+                }
+            }
+        </script>
+
+    </body>
+
+</html>
