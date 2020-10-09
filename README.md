@@ -10,9 +10,9 @@
 
 项目预览：
 
-无人机飞行时视频：
+无人机飞行时动图：
 
-<video src="https://gitee.com/KivenGood/uav-simulation/raw/master/video.mp4"></video>
+![7](https://gitee.com/KivenGood/uav-simulation/raw/master/image/7.png)
 
 无人机飞行图片
 
