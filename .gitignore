@@ -1,6 +1,12 @@
+##############################
+## Folders                  ##
+##############################
 /china/
 /chinaimage/
 /hainan/
 /hainanimage/
 /node_modules/
-/config.js
+##############################
+## Netbeans conf                   ##
+##############################
+config.js

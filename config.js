@@ -6,6 +6,4 @@ var config = {
     port: 3306, //端口号，MySQL默认3306
     database: 'sheet2' //数据库名，不是表名
 };
-
-
 module.exports = config;
