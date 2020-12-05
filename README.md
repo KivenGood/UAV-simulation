@@ -12,7 +12,6 @@
 
 链接：https://pan.baidu.com/s/1WeTSd5OJbZ9Tx1BDndW-oQ 
 提取码：uk50 
-复制这段内容后打开百度网盘手机App，操作更方便哦
 
 项目预览：
 
