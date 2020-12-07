@@ -18,10 +18,10 @@
 无人机飞行时动图：
 
 ![7](https://gitee.com/KivenGood/uav-simulation/raw/master/image/7.gif)
-
-无人机飞行图片
-
 ![1](https://gitee.com/KivenGood/uav-simulation/raw/master/image/1.png)
+Cesium中自带飞机模型：
+![9](https://gitee.com/KivenGood/uav-simulation/raw/master/image/9.gif)
+![8](https://gitee.com/KivenGood/uav-simulation/raw/master/image/8.png)
 
 主页启动图片：
 
