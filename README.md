@@ -2,7 +2,7 @@
 
 2 下载离线地图包。
 
-3 在\Apps\Sandcastle\plane.html中配置离线地图地址。
+3 在sourceConfig.js中配置离线地图地址。
 
 4 在cesium-min文件夹下进命令行使用：npm install 下载包，然后使用npm start启动。
 
