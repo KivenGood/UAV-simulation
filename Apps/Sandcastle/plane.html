@@ -18,6 +18,7 @@
     <title>Cesium</title>
     <script type="text/javascript" src="Sandcastle-header.js"></script>
     <script type="text/javascript" src="ThirdParty/require.js"></script>
+    <script type="text/javascript" src=" ../../sourceConfig.js"></script>
     <script type="text/javascript">
         if (typeof require === 'function') {
             require.config({
@@ -109,6 +110,7 @@
         //全局步长参数
         var step = 0.0001
 
+
         //全局变量标识
         //停止飞行变量和飞机模型变量
         var pauseFlag = 0,
@@ -120,8 +122,8 @@
 
             var globemap = Cesium.createTileMapServiceImageryProvider({
                 //url: 'http://localhost:8080/chinaimage/image/tiles',
-                url: 'http://localhost:8081/hainanimage/tiles',
-                fileExtension: 'png'
+                url: sourceConfig.mapImagesSource,
+                fileExtension: sourceConfig.mapImagesSourceType,
             });
             // Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhZGRkZjAwNi1iMjE3LTRjYmYtYTY1Mi1lOWNjMjliMjJkZmEiLCJpZCI6OTkxOSwic2NvcGVzIjpbImFzciIsImdjIl0sImlhdCI6MTU1NTI5NjM3MH0.znUeCbpM0T6NMJ5_CM59CJ2Be08zLglD73cxVq1acU0'
             var viewer = new Cesium.Viewer('cesiumContainer', {
@@ -147,7 +149,7 @@
             viewer._cesiumWidget._creditContainer.style.display = "none";
             var terrainLayer = new Cesium.CesiumTerrainProvider({
                 //  url: "http://localhost:8080/china",
-                url: "http://localhost:8081/hainan",
+                url: sourceConfig.mapTerrainSource,
 
             });
             myViewer = viewer
@@ -177,7 +179,7 @@
 
         function addaircraft() {
 
-            createModel('models/ch.gltf');
+            createModel(sourceConfig.planeMode);
 
             // createModel('models/Cesium_Air.gltf');
 
