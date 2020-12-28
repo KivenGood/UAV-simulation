@@ -76,5 +76,6 @@ Cesium中自带飞机模型：
 链接：https://pan.baidu.com/s/1WeTSd5OJbZ9Tx1BDndW-oQ 
 提取码：uk50 
 
-
+## 关于离线地图资源：
+关于模型拓展，可以通过这个网站下载免费的gltf文件：https://sketchfab.com/
 
