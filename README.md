@@ -31,6 +31,7 @@
 
 ![7](https://gitee.com/KivenGood/uav-simulation/raw/master/image/7.gif)
 
+
 Cesium中自带飞机模型：
 
 ![9](https://gitee.com/KivenGood/uav-simulation/raw/master/image/9.gif)
@@ -39,11 +40,13 @@ Cesium中自带飞机模型：
 
 ![8](https://gitee.com/KivenGood/uav-simulation/raw/master/image/8.png)
 
+
 主页启动图片：
 
 ![2](https://gitee.com/KivenGood/uav-simulation/raw/master/image/2.png)
 
 ![3](https://gitee.com/KivenGood/uav-simulation/raw/master/image/3.png)
+
 
 无人机状态显示：
 
@@ -52,6 +55,7 @@ Cesium中自带飞机模型：
 ![5](https://gitee.com/KivenGood/uav-simulation/raw/master/image/5.png)
 
 ![6](https://gitee.com/KivenGood/uav-simulation/raw/master/image/6.png)
+
 
 ## 安装
 1 安装node.js环境。
@@ -66,6 +70,7 @@ Cesium中自带飞机模型：
 
 状态页面除map.heml使用百度地图无法离线外，其余都可离线使用。
 
+
 ## 关于离线地图资源：
 
 支持离线地图，但需要自行下载地图瓦片，瓦片支持精度分级。
@@ -76,6 +81,7 @@ Cesium中自带飞机模型：
 链接：https://pan.baidu.com/s/1WeTSd5OJbZ9Tx1BDndW-oQ 
 提取码：uk50 
 
-## 关于离线地图资源：
-关于模型拓展，可以通过这个网站下载免费的gltf文件：https://sketchfab.com/
+
+## 关于更换飞机模型：
+更换模型，可以通过这个网站下载免费的gltf文件：https://sketchfab.com/，也可以自己制作飞机模型。
 
