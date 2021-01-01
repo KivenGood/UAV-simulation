@@ -29,32 +29,32 @@
 
 1.1 无人机飞行时动图：
 
-![7](https://github.com/KivenGood/UAV-simulation/tree/master/image/7.gif)
+![7](https://github.com/KivenGood/UAV-simulation/raw/master/image/7.gif)
 
 
 1.2 Cesium中自带飞机模型：
 
-![9](https://github.com/KivenGood/UAV-simulation/blob/master/image/9.gif)
+![9](https://github.com/KivenGood/UAV-simulation/raw/master/image/9.gif)
 
-![1](https://github.com/KivenGood/UAV-simulation/blob/master/image/1.png)
+![1](https://github.com/KivenGood/UAV-simulation/raw/master/image/1.png)
 
-![8](https://github.com/KivenGood/UAV-simulation/blob/master/image/8.png)
+![8](https://github.com/KivenGood/UAV-simulation/raw/master/image/8.png)
 
 
 1.3 主页启动图片：
 
-![2](https://github.com/KivenGood/UAV-simulation/blob/master/image/2.png)
+![2](https://github.com/KivenGood/UAV-simulation/raw/master/image/2.png)
 
-![3](https://github.com/KivenGood/UAV-simulation/blob/master/image/3.png)
+![3](https://github.com/KivenGood/UAV-simulation/raw/master/image/3.png)
 
 
 1.4 无人机状态显示：
 
-![4](https://github.com/KivenGood/UAV-simulation/blob/master/image/4.png)
+![4](https://github.com/KivenGood/UAV-simulation/raw/master/image/4.png)
 
-![5](https://github.com/KivenGood/UAV-simulation/blob/master/image/5.png)
+![5](https://github.com/KivenGood/UAV-simulation/raw/master/image/5.png)
 
-![6](https://github.com/KivenGood/UAV-simulation/blob/master/image/6.png)
+![6](https://github.com/KivenGood/UAV-simulation/raw/master/image/6.png)
 
 
 ## 2.安装
