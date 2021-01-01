@@ -38,12 +38,12 @@
 
 ![1](https://github.com/KivenGood/UAV-simulation/blob/master/image/1.png)
 
-![8](https://github.com/KivenGood/UAV-simulation/raw/master/image/8.png)
+![8](https://github.com/KivenGood/UAV-simulation/blob/master/image/8.png)
 
 
 1.3 主页启动图片：
 
-![2](https://github.com/KivenGood/UAV-simulation/raw/master/image/2.png)
+![2](https://github.com/KivenGood/UAV-simulation/blob/master/image/2.png)
 
 ![3](https://gitee.com/KivenGood/uav-simulation/tree/master/image/3.png)
 
