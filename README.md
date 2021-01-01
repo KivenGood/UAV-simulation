@@ -29,32 +29,32 @@
 
 1.1 无人机飞行时动图：
 
-![7](https://upload-images.jianshu.io/upload_images/20355374-2af8d969bccb07ee.gif)
+![7](https://github.com/KivenGood/UAV-simulation/blob/master/image/7.gif)
 
 
 1.2 Cesium中自带飞机模型：
 
-![9](https://upload-images.jianshu.io/upload_images/20355374-b11273cb970755d6.gif)
+![9](https://github.com/KivenGood/UAV-simulation/blob/master/image/9.gif)
 
-![1](https://upload-images.jianshu.io/upload_images/20355374-9646dff88067d998.png)
+![1](https://github.com/KivenGood/UAV-simulation/blob/master/image/1.png)
 
-![8](https://upload-images.jianshu.io/upload_images/20355374-859343c2c9b09298.png)
+![8](https://github.com/KivenGood/UAV-simulation/blob/master/image/8.png)
 
 
 1.3 主页启动图片：
 
-![2](https://upload-images.jianshu.io/upload_images/20355374-859343c2c9b09298.png)
+![2](https://github.com/KivenGood/UAV-simulation/blob/master/image/2.png)
 
-![3](https://upload-images.jianshu.io/upload_images/20355374-6a0502527f0eb971.png)
+![3](https://github.com/KivenGood/UAV-simulation/blob/master/image/3.png)
 
 
 1.4 无人机状态显示：
 
-![4](https://upload-images.jianshu.io/upload_images/20355374-027d41c96832cad7.png)
+![4](https://github.com/KivenGood/UAV-simulation/blob/master/image/4.png)
 
-![5](https://upload-images.jianshu.io/upload_images/20355374-b479cd46e6e64a74.png)
+![5](https://github.com/KivenGood/UAV-simulation/blob/master/image/5.png)
 
-![6](https://upload-images.jianshu.io/upload_images/20355374-a6f35ea7d94361da.png)
+![6](https://github.com/KivenGood/UAV-simulation/blob/master/image/6.png)
 
 
 ## 2.安装
